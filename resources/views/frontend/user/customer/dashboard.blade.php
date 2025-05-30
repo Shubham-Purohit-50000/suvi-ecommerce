@@ -226,6 +226,7 @@
             <h3 class=" mb-0 fs-14 fs-md-16 fw-700 text-dark">{{ translate('My Wishlist')}}</h3>
         </div>
         <div class="col-6 text-right">
+            <a class="text-blue fs-10 fs-md-12 fw-700 hov-text-primary animate-underline-primary mr-3" href="{{ route('my_subscription') }}">{{ translate('My Subscriptions') }}</a>
             <a class="text-blue fs-10 fs-md-12 fw-700 hov-text-primary animate-underline-primary" href="{{ route('wishlists.index') }}">{{ translate('View All') }}</a>
         </div>
     </div>

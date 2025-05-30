@@ -316,6 +316,14 @@
                         </tr>
                         <tr>
                             <td>
+                                <strong class="text-muted">{{ translate('Special Subscription Discount') }} :</strong>
+                            </td>
+                            <td>
+                                {{ single_price($order->special_discount) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <strong class="text-muted">{{ translate('TOTAL') }} :</strong>
                             </td>
                             <td class="text-muted h5">

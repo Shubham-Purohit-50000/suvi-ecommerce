@@ -84,7 +84,7 @@ class CheckoutController extends Controller
             if (get_setting('shipping_type') == 'carrier_wise_shipping') {
                 $default_shipping_type = 'carrier';
                // $zone = $country_id != 0 ? Country::where('id', $country_id)->first()->zone_id : 0;
-               $zone = $country_id != 0 ? Country::where('id', $country_id)->where('status', 1)->first()->zone_id ?? 0 : 0;
+               $zone = $country_id != 0 ? Country::where('id', $country_id)->where('status', 1)->first()?->zone_id ?? 0 : 0;
 
                 $carrier_query = Carrier::where('status', 1);
                 $carrier_query->whereIn('id',function ($query) use ($zone) {
@@ -117,7 +117,23 @@ class CheckoutController extends Controller
 
             $carts = $carts->fresh();
 
-            return view('frontend.checkout', compact('carts', 'address_id', 'total', 'carrier_list', 'shipping_info'));
+            $is_special_subscribed = false;
+            $special_discount = 0;
+            if (auth()->check()) {
+                $user = Auth::user();
+                $active_special_subscription = $user->specialSubscriptions()
+                    ->where('start_date', '<=', now())
+                    ->where('end_date', '>=', now())
+                    ->with('specialSubscription')
+                    ->latest('end_date')
+                    ->first();
+                if ($active_special_subscription && $active_special_subscription->specialSubscription) {
+                    $is_special_subscribed = true;
+                    $special_discount = $active_special_subscription->specialSubscription->discount;
+                }
+            }
+
+            return view('frontend.checkout', compact('carts', 'address_id', 'total', 'carrier_list', 'shipping_info', 'is_special_subscribed', 'special_discount'));
         }
         flash(translate('Please Select cart items to Proceed'))->error();
         return back();

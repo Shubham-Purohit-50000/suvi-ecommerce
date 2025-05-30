@@ -56,6 +56,7 @@ use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\WarrantyController;
 use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\ZoneController;
+use App\Http\Controllers\SpecialSubscriptionController;
 
 /*
   |--------------------------------------------------------------------------
@@ -639,6 +640,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
     Route::post('/system/generate-sitemap', [AdminController::class, 'DoSitemapGenerate'])->name('generate_sitemap');
     Route::post('/system/delete-sitemap', [AdminController::class, 'DeleteSitemapFile'])->name('delete_sitemap');
     Route::post('/system/download-old-sitemap', [AdminController::class, 'DownloadSingleSitemapFile'])->name('download_old_sitemap');
+
+    // shubham's code
+    
+    Route::controller(SpecialSubscriptionController::class)->group(function () {
+        Route::get('/special-subscription/create', 'create')->name('admin.special_subscription.create');
+        Route::post('/special-subscription/store', 'store')->name('admin.special_subscription.store');
+        Route::get('/special-subscription/edit/{id}', 'edit')->name('admin.special_subscription.edit');
+        Route::put('/special-subscription/update/{id}', 'update')->name('admin.special_subscription.update');
+        Route::delete('/special-subscription/destroy/{id}', 'destroy')->name('admin.special_subscription.destroy');
+        Route::get('/special-subscription', 'index')->name('admin.special_subscription.index');
+    });
+
 });
 
 Route::get('/system/sitemap-item-add/{item}', [AdminController::class, 'SitemapItems'])->name('sitemap_item_add');

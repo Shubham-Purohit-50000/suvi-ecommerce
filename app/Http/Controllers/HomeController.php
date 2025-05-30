@@ -38,6 +38,8 @@ use Illuminate\Support\Facades\URL;
 use ZipArchive;
 use Carbon\Carbon;
 use Session;
+use App\Models\SpecialSubscription;
+use App\Models\CustomerSpecialSubscription;
 
 class HomeController extends Controller
 {
@@ -962,5 +964,66 @@ class HomeController extends Controller
             $customerVerification->save();
                 return view('auth.' . get_setting('authentication_layout_select') . '.user_registration', compact('customerVerification', 'email', 'phone'));
         }
+    }
+
+    /**
+     * Show all special subscriptions for the customer.
+     */
+    public function mySubscription()
+    {
+        $user = Auth::user();
+        // Get all special subscriptions
+        $special_subscriptions = SpecialSubscription::all();
+        // Get user's active subscriptions (if needed for highlighting)
+        $active_subscriptions = CustomerSpecialSubscription::where('customer_id', $user->id)
+            ->pluck('special_subscription_id')->toArray();
+        return view('frontend.user.customer.my_subscription', compact('special_subscriptions', 'active_subscriptions'));
+    }
+
+    /**
+     * Handle purchase of a special subscription and redirect to payment.
+     */
+    public function purchaseSpecialSubscription(Request $request)
+    {
+        $request->validate([
+            'special_subscription_id' => 'required|exists:special_subscriptions,id',
+        ]);
+        $subscription = SpecialSubscription::findOrFail($request->special_subscription_id);
+        $user = Auth::user();
+        // Store purchase intent in session for payment callback
+        session(['special_subscription_purchase' => [
+            'user_id' => $user->id,
+            'special_subscription_id' => $subscription->id,
+            'amount' => $subscription->amount,
+        ]]);
+        // Redirect to Razorpay payment page
+        return redirect()->route('payment.rozer', [
+            'amount' => $subscription->amount,
+            'purpose' => 'special_subscription',
+            'subscription_id' => $subscription->id
+        ]);
+    }
+
+    /**
+     * Handle payment callback for special subscription purchase.
+     */
+    public function specialSubscriptionPaymentCallback(Request $request)
+    {
+        $purchase = session('special_subscription_purchase');
+        if (!$purchase || !isset($purchase['user_id'], $purchase['special_subscription_id'], $purchase['amount'])) {
+            flash(translate('Invalid subscription purchase session.'))->error();
+            return redirect()->route('my_subscription');
+        }
+        // Here, check payment status (already handled by payment gateway)
+        // If payment successful, create CustomerSpecialSubscription
+        CustomerSpecialSubscription::create([
+            'customer_id' => $purchase['user_id'],
+            'special_subscription_id' => $purchase['special_subscription_id'],
+            'start_date' => now(),
+            'end_date' => now()->addYear(), // or as per your logic
+        ]);
+        session()->forget('special_subscription_purchase');
+        flash(translate('Subscription purchased successfully!'))->success();
+        return redirect()->route('my_subscription');
     }
 }

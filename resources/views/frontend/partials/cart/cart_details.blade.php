@@ -22,6 +22,14 @@
                         </div>
                     @endif
                 @endif
+                <!-- Special Subscription Discount Banner -->
+                @if(isset($is_special_subscribed) && $is_special_subscribed && isset($special_discount) && $special_discount > 0)
+                    <div class="alert alert-success mb-3">
+                        <strong>{{ translate('Special Subscription Active!') }}</strong>
+                        <br>
+                        {{ translate('You are eligible for an extra') }} <b>{{ $special_discount }}%</b> {{ translate('discount on all products in your cart!') }}
+                    </div>
+                @endif
                 <div class="bg-white p-3 p-lg-4 text-left">
                     <div class="mb-4">
                         <div class="form-group mb-2 border-bottom">

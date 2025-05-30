@@ -193,6 +193,18 @@
                 </li>
                 @endif
 
+                <!-- My Subscription -->
+                <li class="aiz-side-nav-item">
+                    <a href="{{ route('my_subscription') }}" class="aiz-side-nav-link {{ areActiveRoutes(['my_subscription']) }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <rect x="3" y="5" width="18" height="14" rx="2" stroke="#b5b5bf" stroke-width="1.5" fill="none"/>
+                            <rect x="7" y="2" width="10" height="4" rx="1" stroke="#b5b5bf" stroke-width="1.5" fill="none"/>
+                            <path d="M8 11h8M8 15h5" stroke="#b5b5bf" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        <span class="aiz-side-nav-text ml-3">{{ translate('My Subscription') }}</span>
+                    </a>
+                </li>
+
                 <!-- Classified Products -->
                 @if (get_setting('classified_product') == 1)
                     <li class="aiz-side-nav-item">

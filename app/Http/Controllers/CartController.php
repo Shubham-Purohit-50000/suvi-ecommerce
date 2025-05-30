@@ -41,7 +41,23 @@ class CartController extends Controller
             $carts = $carts->fresh();
         }
 
-        return view('frontend.view_cart', compact('carts'));
+        $is_special_subscribed = false;
+        $special_discount = 0;
+        if (auth()->user()) {
+            $user = Auth::user();
+            $active_special_subscription = $user->specialSubscriptions()
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now())
+                ->with('specialSubscription')
+                ->latest('end_date')
+                ->first();
+            if ($active_special_subscription && $active_special_subscription->specialSubscription) {
+                $is_special_subscribed = true;
+                $special_discount = $active_special_subscription->specialSubscription->discount;
+            }
+        }
+
+        return view('frontend.view_cart', compact('carts', 'is_special_subscribed', 'special_discount'));
     }
 
     public function showCartModal(Request $request)
@@ -229,15 +245,34 @@ class CartController extends Controller
 
         if (auth()->user() != null) {
             $user_id = Auth::user()->id;
+            $user = Auth::user();
+            $is_special_subscribed = false;
+            $special_discount = 0;
+            $active_special_subscription = $user->specialSubscriptions()
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now())
+                ->with('specialSubscription')
+                ->latest('end_date')
+                ->first();
+            if ($active_special_subscription && $active_special_subscription->specialSubscription) {
+                $is_special_subscribed = true;
+                $special_discount = $active_special_subscription->specialSubscription->discount;
+            }
             $carts = Cart::where('user_id', $user_id)->get();
         } else {
             $temp_user_id = $request->session()->get('temp_user_id');
             $carts = Cart::where('temp_user_id', $temp_user_id)->get();
+            $is_special_subscribed = false;
+            $special_discount = 0;
         }
 
         return array(
             'cart_count' => count($carts),
-            'cart_view' => view('frontend.partials.cart.cart_details', compact('carts'))->render(),
+            'cart_view' => view('frontend.partials.cart.cart_details', [
+                'carts' => $carts,
+                'is_special_subscribed' => $is_special_subscribed,
+                'special_discount' => $special_discount
+            ])->render(),
             'nav_cart_view' => view('frontend.partials.cart.cart')->render(),
         );
     }

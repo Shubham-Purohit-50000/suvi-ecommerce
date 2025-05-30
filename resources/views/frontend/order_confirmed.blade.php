@@ -223,6 +223,15 @@
                                                             <span>{{ single_price($order->coupon_discount) }}</span>
                                                         </td>
                                                     </tr>
+                                                    <!-- Special Subscription Discount -->
+                                                    @if(isset($order->special_discount) && $order->special_discount > 0)
+                                                    <tr>
+                                                        <th class="border-top-0 py-2 text-success">{{ translate('Special Subscription Discount') }} ({{ $order->special_discount_percent ?? '' }}%)</th>
+                                                        <td class="text-right border-top-0 pr-0 py-2 text-success">
+                                                            -{{ single_price($order->special_discount) }}
+                                                        </td>
+                                                    </tr>
+                                                    @endif
                                                     <!-- Total -->
                                                     <tr>
                                                         <th class="py-2"><span class="fw-600">{{ translate('Total')}}</span></th>
@@ -264,4 +273,4 @@
     <!-- Facebook Pixel purchase Event -->
     @endif
 @endsection
-        
+
