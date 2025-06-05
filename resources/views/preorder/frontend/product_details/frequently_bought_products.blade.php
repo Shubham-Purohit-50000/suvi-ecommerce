@@ -1,7 +1,7 @@
 <div class="bg-white border rounded-2">
     <div class="p-3 p-sm-4">
         <h3 class="fs-16 fw-700 mb-0">
-            <span class="mr-4 text-uppercase">{{ translate('Frequently Bought Products') }}</span>
+            <span class="mr-4 text-uppercase">{{ translate('Related Products') }}</span>
         </h3>
     </div>
     <div class="px-4">

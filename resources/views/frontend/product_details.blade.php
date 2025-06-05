@@ -123,7 +123,6 @@
             @endif
         </div>
     </section>
-
 @endsection
 
 @section('modal')

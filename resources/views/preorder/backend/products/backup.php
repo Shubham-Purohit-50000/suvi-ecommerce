@@ -1189,7 +1189,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="mb-0 h6 text-orange">
-                            {{translate('Frequently Bought Products')}}
+                            {{translate('Related Products')}}
                         </h5>
                     </div>
 
