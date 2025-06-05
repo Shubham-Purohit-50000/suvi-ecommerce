@@ -8,6 +8,20 @@
                 <div class="col-lg-8 mx-auto">
                     <form class="form-default" data-toggle="validator" action="{{ route('payment.checkout') }}" role="form" method="POST" id="checkout-form">
                         @csrf
+                        @if(isset($is_special_subscribed) && $is_special_subscribed && isset($special_discount) && $special_discount > 0 && isset($special_discount_amount) && $special_discount_amount > 0)
+                            <div class="alert alert-success mb-3">
+                                <strong>{{ translate('Special Subscription Active!') }}</strong>
+                                <br>
+                                {{ translate('You are eligible for an extra') }} <b>{{ $special_discount }}%</b> {{ translate('discount on all products in your cart!') }}
+                            </div>
+                        @endif
+                        @if(isset($general_discount_amount) && $general_discount_amount > 0)
+                            <div class="alert alert-success mb-3">
+                                <strong>{{ translate('General Discount Applied!') }}</strong>
+                                <br>
+                                {{ $general_discount_message ?? translate('You have received a general discount.') }}
+                            </div>
+                        @endif
 
                         <div class="accordion" id="accordioncCheckoutInfo">
 

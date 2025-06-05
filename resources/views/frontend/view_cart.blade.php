@@ -3,7 +3,14 @@
 @section('content')
     <!-- Cart Details -->
     <section class="my-4" id="cart-details">
-        @include('frontend.partials.cart.cart_details', ['carts' => $carts])
+        @include('frontend.partials.cart.cart_details', [
+            'carts' => $carts,
+            'is_special_subscribed' => isset(
+                $is_special_subscribed) ? $is_special_subscribed : false,
+            'special_discount' => isset($special_discount) ? $special_discount : 0,
+            'general_discount_amount' => isset($general_discount_amount) ? $general_discount_amount : 0,
+            'general_discount_message' => isset($general_discount_message) ? $general_discount_message : null
+        ])
     </section>
 
 @endsection

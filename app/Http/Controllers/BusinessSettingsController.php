@@ -619,4 +619,22 @@ class BusinessSettingsController extends Controller
         flash(translate('Demo data uploaded successfully'))->success();
         return redirect()->back();
     }
+
+    public function general_discount_update(Request $request)
+    {
+        $data = [
+            'active' => $request->has('general_discount_active') ? 1 : 0,
+            'percentage' => $request->input('general_discount_percentage', 0)
+        ];
+        $business_settings = BusinessSetting::where('type', 'general_discount')->first();
+        if (!$business_settings) {
+            $business_settings = new BusinessSetting();
+            $business_settings->type = 'general_discount';
+        }
+        $business_settings->value = json_encode($data);
+        $business_settings->save();
+        \Artisan::call('cache:clear');
+        flash(translate('General Discount settings updated successfully'))->success();
+        return back();
+    }
 }

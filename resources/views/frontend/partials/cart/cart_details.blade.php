@@ -22,6 +22,14 @@
                         </div>
                     @endif
                 @endif
+                <!-- general discount message -->
+                @if(isset($general_discount_message) && $general_discount_message)
+                    <div class="alert alert-success mb-3">
+                        <strong>{{ translate('General Discount Available!') }}</strong>
+                        <br>
+                        {{ $general_discount_message }}
+                    </div>
+                @endif
                 <!-- Special Subscription Discount Banner -->
                 @if(isset($is_special_subscribed) && $is_special_subscribed && isset($special_discount) && $special_discount > 0)
                     <div class="alert alert-success mb-3">
@@ -294,7 +302,14 @@
 
             <!-- Cart Summary -->
             <div class="col-lg-4 mt-lg-0 mt-4" id="cart_summary">
-                @include('frontend.partials.cart.cart_summary', ['proceed' => 1, 'carts' => $active_carts])
+                @include('frontend.partials.cart.cart_summary', [
+                    'proceed' => 1,
+                    'carts' => $active_carts,
+                    'is_special_subscribed' => isset($is_special_subscribed) ? $is_special_subscribed : false,
+                    'special_discount' => isset($special_discount) ? $special_discount : 0,
+                    'general_discount_amount' => isset($general_discount_amount) ? $general_discount_amount : 0,
+                    'general_discount_message' => isset($general_discount_message) ? $general_discount_message : null
+                ])
             </div>
         </div>
     @else

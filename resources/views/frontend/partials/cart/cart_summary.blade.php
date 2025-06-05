@@ -106,13 +106,25 @@
                     <!-- Special Subscription Discount -->
                     @if(isset($is_special_subscribed) && $is_special_subscribed && isset($special_discount) && $special_discount > 0 && $special_discount_amount > 0)
                         <tr class="cart-special-discount">
-                            <th class="pl-0 fs-14 fw-400 pt-0 pb-2 text-dark border-top-0">{{ translate('Special Subscription Discount') }}</th>
-                            <td class="text-right pr-0 fs-14 pt-0 pb-2 text-dark border-top-0">{{ single_price($special_discount_amount) }}</td>
+                            <th class="pl-0 fs-14 fw-400 pt-0 pb-2 text-success border-top-0">{{ translate('Special Subscription Discount') }}</th>
+                            <td class="text-right pr-0 fs-14 pt-0 pb-2 text-success border-top-0">-{{ single_price($special_discount_amount) }}</td>
+                        </tr>
+                    @endif
+                    <!-- General Discount -->
+                    @if(isset($general_discount_amount) && $general_discount_amount > 0)
+                        <tr class="cart-general-discount">
+                            <th class="pl-0 fs-14 fw-400 pt-0 pb-2 text-success border-top-0">
+                                {{ translate('General Discount') }}
+                                @if(isset($general_discount_message))<br><small>{{ $general_discount_message }}</small>@endif
+                            </th>
+                            <td class="text-right pr-0 fs-14 pt-0 pb-2 text-success border-top-0">
+                                -{{ single_price($general_discount_amount) }}
+                            </td>
                         </tr>
                     @endif
 
                     @php
-                        $grand_total = $subtotal + $tax + $shipping - $coupon_discount - $special_discount_amount;
+                        $grand_total = $subtotal + $tax + $shipping - $coupon_discount - $special_discount_amount - ($general_discount_amount ?? 0);
                     @endphp
                     <!-- Total -->
                     <tr class="cart-total">

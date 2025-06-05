@@ -2173,6 +2173,13 @@
                         <span class="aiz-side-nav-arrow"></span>
                     </a>
                     <ul class="aiz-side-nav-list level-2">
+                    
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('general_discount.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{translate('General Discount')}}</span>
+                            </a>
+                        </li>
+
                         @can('system_update')
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('system_update') }}" class="aiz-side-nav-link">

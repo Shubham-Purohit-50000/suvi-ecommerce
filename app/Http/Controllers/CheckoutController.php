@@ -16,6 +16,7 @@ use App\Models\Product;
 use App\Models\User;
 use App\Utility\EmailUtility;
 use App\Utility\NotificationUtility;
+use App\Models\BusinessSetting;
 use Session;
 use Auth;
 use Hash;
@@ -119,6 +120,9 @@ class CheckoutController extends Controller
 
             $is_special_subscribed = false;
             $special_discount = 0;
+            $special_discount_amount = 0;
+            $general_discount_amount = 0;
+            $general_discount_message = null;
             if (auth()->check()) {
                 $user = Auth::user();
                 $active_special_subscription = $user->specialSubscriptions()
@@ -130,10 +134,23 @@ class CheckoutController extends Controller
                 if ($active_special_subscription && $active_special_subscription->specialSubscription) {
                     $is_special_subscribed = true;
                     $special_discount = $active_special_subscription->specialSubscription->discount;
+                    $special_discount_amount = ($subtotal * $special_discount) / 100;
+                }
+            }
+            // General Discount
+            $general_discount = BusinessSetting::where('type', 'general_discount')->first();
+            if ($general_discount) {
+                $general_discount_data = json_decode($general_discount->value, true);
+                if (isset($general_discount_data['active']) && $general_discount_data['active'] == 1 && isset($general_discount_data['percentage']) && $general_discount_data['percentage'] > 0) {
+                    $unique_products = $carts->pluck('product_id')->unique()->count();
+                    if ($unique_products >= 2) {
+                        $general_discount_amount = ($subtotal * $general_discount_data['percentage']) / 100;
+                        $general_discount_message = __('You have received a General Discount of :percent%', ['percent' => $general_discount_data['percentage']]);
+                    }
                 }
             }
 
-            return view('frontend.checkout', compact('carts', 'address_id', 'total', 'carrier_list', 'shipping_info', 'is_special_subscribed', 'special_discount'));
+            return view('frontend.checkout', compact('carts', 'address_id', 'total', 'carrier_list', 'shipping_info', 'is_special_subscribed', 'special_discount', 'special_discount_amount', 'general_discount_amount', 'general_discount_message'));
         }
         flash(translate('Please Select cart items to Proceed'))->error();
         return back();
@@ -163,20 +180,40 @@ class CheckoutController extends Controller
         $user = auth()->user();
         $carts = Cart::where('user_id', $user->id)->active()->get();
 
+        // Always calculate subtotal
+        $subtotal = 0;
+        foreach ($carts as $key => $cartItem){
+            $product = Product::find($cartItem['product_id']);
+            $subtotal += cart_product_price($cartItem, $product, false, false) * $cartItem['quantity'];
+        }
 
         // Minumum order amount check
         if(get_setting('minimum_order_amount_check') == 1){
-            $subtotal = 0;
-            foreach ($carts as $key => $cartItem){
-                $product = Product::find($cartItem['product_id']);
-                $subtotal += cart_product_price($cartItem, $product, false, false) * $cartItem['quantity'];
-            }
             if ($subtotal < get_setting('minimum_order_amount')) {
                 flash(translate('You order amount is less than the minimum order amount'))->warning();
                 return redirect()->route('home');
             }
         }
-        // Minumum order amount check end
+        // General Discount Calculation
+        $general_discount = BusinessSetting::where('type', 'general_discount')->first();
+        $general_discount_amount = 0;
+        $general_discount_percent = 0;
+        if ($general_discount) {
+            $general_discount_data = json_decode($general_discount->value, true);
+            if (isset($general_discount_data['active']) && $general_discount_data['active'] == 1 && isset($general_discount_data['percentage']) && $general_discount_data['percentage'] > 0) {
+                $unique_products = $carts->pluck('product_id')->unique()->count();
+                if ($unique_products >= 2) {
+                    $general_discount_percent = $general_discount_data['percentage'];
+                    $general_discount_amount = ($subtotal * $general_discount_percent) / 100;
+                }
+            }
+        }
+
+        // Inject general discount values into request for OrderController
+        $request->merge([
+            'general_discount_amount' => $general_discount_amount,
+            'general_discount_percent' => $general_discount_percent
+        ]);
 
         (new OrderController)->store($request);
 

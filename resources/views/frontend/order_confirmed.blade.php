@@ -232,6 +232,15 @@
                                                         </td>
                                                     </tr>
                                                     @endif
+                                                    <!-- General Discount -->
+                                                    @if(isset($order->general_discount_amount) && $order->general_discount_amount > 0)
+                                                    <tr>
+                                                        <th class="border-top-0 py-2 text-success">{{ translate('General Discount') }} ({{ $order->general_discount_percent ?? '' }}%)</th>
+                                                        <td class="text-right border-top-0 pr-0 py-2 text-info">
+                                                            -{{ single_price($order->general_discount_amount) }}
+                                                        </td>
+                                                    </tr>
+                                                    @endif
                                                     <!-- Total -->
                                                     <tr>
                                                         <th class="py-2"><span class="fw-600">{{ translate('Total')}}</span></th>
