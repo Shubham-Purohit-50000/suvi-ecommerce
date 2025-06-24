@@ -18,6 +18,7 @@
 	<title>{{ get_setting('website_name').' | '.get_setting('site_motto') }}</title>
 
 	<!-- google font -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700">
 
 	<!-- aiz core css -->

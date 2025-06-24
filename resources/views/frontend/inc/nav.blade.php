@@ -26,12 +26,76 @@
     @endif
 
     <!-- Top Bar -->
-    <div class="top-navbar bg-white z-1035 h-35px h-sm-auto">
+    <div class="top-header" bis_skin_checked="1">
+            <div class="mobile-fix-option" bis_skin_checked="1"></div>
+            <div class="container" bis_skin_checked="1">
+                <div class="row" bis_skin_checked="1">
+                    <div class="col-lg-6" bis_skin_checked="1">
+                        <div class="header-contact" bis_skin_checked="1">
+                            <ul>
+                                <li>Welcome to Our store Suvi</li>
+                                <li><a href="tel:{{ get_setting('contact_phone') }}" ><i class="ri-phone-fill"></i>Call Us: {{ get_setting('contact_phone') }}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 text-end" bis_skin_checked="1">
+                        <ul class="header-dropdown">
+                            <li class="mobile-wishlist">@include('frontend.partials.wishlist')
+                            </li>
+                            <li class="onhover-dropdown mobile-account"> <i class="ri-user-fill"></i>
+                               <div class="d-none d-xl-block ml-auto mr-0">
+                        @auth
+                            <span
+                                class="d-flex align-items-center nav-user-info py-20px @if (isAdmin()) ml-5 @endif"
+                                id="nav-user-info">
+                                <!-- Image -->
+                                <span
+                                    class="size-40px rounded-circle overflow-hidden border border-transparent nav-user-img">
+                                    @if ($user->avatar_original != null)
+                                        <img src="{{ $user_avatar }}"
+                                            class="img-fit h-100" alt="{{ translate('avatar') }}"
+                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
+                                    @else
+                                        <img src="{{ static_asset('assets/img/avatar-place.png') }}" class="image" alt="{{ translate('avatar') }}"
+                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
+                                    @endif
+                                </span>
+                                <!-- Name -->
+                                <h4 class="h5 fs-14 fw-700 text-dark ml-2 mb-0">{{ $user->name }}</h4>
+                            </span>
+                        @else
+                            <!--Login & Registration -->
+                            <span class="d-flex align-items-center nav-user-info ml-3">
+                                <!-- Image -->
+                                <span
+                                    class="size-40px rounded-circle overflow-hidden border d-flex align-items-center justify-content-center nav-user-img">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="19.902" height="20.012"
+                                        viewBox="0 0 19.902 20.012">
+                                        <path id="fe2df171891038b33e9624c27e96e367"
+                                            d="M15.71,12.71a6,6,0,1,0-7.42,0,10,10,0,0,0-6.22,8.18,1.006,1.006,0,1,0,2,.22,8,8,0,0,1,15.9,0,1,1,0,0,0,1,.89h.11a1,1,0,0,0,.88-1.1,10,10,0,0,0-6.25-8.19ZM12,12a4,4,0,1,1,4-4A4,4,0,0,1,12,12Z"
+                                            transform="translate(-2.064 -1.995)" fill="#91919b" />
+                                    </svg>
+                                </span>
+                                <a href="{{ route('user.login') }}"
+                                    class="text-reset opacity-60 hov-opacity-100 hov-text-primary fs-12 d-inline-block border-right border-soft-light border-width-2 pr-2 ml-3">{{ translate('Login') }}</a>
+                                <a href="{{ route(get_setting('customer_registration_verify') === '1' ? 'registration.verification' : 'user.registration') }}"
+                                {{-- <a href="{{ route('user.registration') }}" --}}
+                                    class="text-reset opacity-60 hov-opacity-100 hov-text-primary fs-12 d-inline-block py-2 pl-2">{{ translate('Registration') }}</a>
+                            </span>
+                        @endauth
+                    </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--     <div class="top-navbar bg-white z-1035 h-35px h-sm-auto">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col">
                     <ul class="list-inline d-flex justify-content-between justify-content-lg-start mb-0">
-                        <!-- Language switcher -->
+                    
                         @if (get_setting('show_language_switcher') == 'on')
                             <li class="list-inline-item dropdown mr-4" id="lang-change">
 
@@ -55,7 +119,7 @@
                             </li>
                         @endif
 
-                        <!-- Currency Switcher -->
+                       
                         @if (get_setting('show_currency_switcher') == 'on')
                             <li class="list-inline-item dropdown ml-auto ml-lg-0 mr-0" id="currency-change">
                                 @php
@@ -85,7 +149,7 @@
                 <div class="col-6 text-right d-none d-lg-block">
                     <ul class="list-inline mb-0 h-100 d-flex justify-content-end align-items-center">
                         @if (get_setting('vendor_system_activation') == 1)
-                            <!-- Become a Seller -->
+                           
                             <li class="list-inline-item mr-0 pl-0 py-2">
                                 <a href="{{ route(get_setting('seller_registration_verify') === '1' ? 'shop-reg.verification' : 'shops.create') }}"
                                     class="text-secondary fs-12 pr-3 d-inline-block border-width-2 border-right">{{ translate('Become a Seller !') }}</a>
@@ -94,15 +158,15 @@
                                 <a href="{{ route('shops.create') }}"
                                     class="text-secondary fs-12 pr-3 d-inline-block border-width-2 border-right">{{ translate('Become a Seller !') }}</a>
                             </li> --}}
-                            <!-- Seller Login -->
+                            
                             <li class="list-inline-item mr-0 pl-0 py-2">
                                 <a href="{{ route('seller.login') }}"
                                     class="text-secondary fs-12 pl-3 d-inline-block">{{ translate('Login to Seller') }}</a>
                             </li>
                         @endif
                         @if (get_setting('helpline_number'))
-                            <!-- Helpline -->
-                            <li class="list-inline-item ml-3 pl-3 mr-0 pr-0">
+                          Helpline -->
+                    <!--         <li class="list-inline-item ml-3 pl-3 mr-0 pr-0">
                                 <a href="tel:{{ get_setting('helpline_number') }}"
                                     class="text-secondary fs-12 d-inline-block py-2">
                                     <span>{{ translate('Helpline') }}</span>
@@ -114,15 +178,135 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>  -->
+    <div class="container" bis_skin_checked="1">
+            <div class="row" bis_skin_checked="1">
+                <div class="col-sm-12" bis_skin_checked="1">
+                    <div class="main-menu" bis_skin_checked="1">
+                        <div class="menu-left" bis_skin_checked="1">
+                            
+                            <div class="brand-logo" bis_skin_checked="1">
+                                <a class="d-block" href="{{ route('home') }}">
+                                        @php
+                                            $header_logo = get_setting('header_logo');
+                                        @endphp
+                                        @if ($header_logo != null)
+                                            <img src="{{ uploaded_asset($header_logo) }}" alt="{{ env('APP_NAME') }}"
+                                                class="mw-100 h-30px h-md-40px" height="40">
+                                        @else
+                                            <img src="{{ static_asset('assets/img/logo.png') }}" alt="{{ env('APP_NAME') }}"
+                                                class="mw-100 h-30px h-md-40px" height="40">
+                                        @endif
+                                    </a>
+                            </div>
+                        </div>
+                        <div class="menu-right pull-right" bis_skin_checked="1">
+                              @php
+                        $nav_txt_color = ((get_setting('header_nav_menu_text') == 'light') ||  (get_setting('header_nav_menu_text') == null)) ? 'text-black' : 'text-dark';
+                    @endphp
+                            <div bis_skin_checked="1">
+                                <nav id="main-nav">
+                                    <ul id="main-menu" class="sm pixelstrap sm-horizontal" data-smartmenus-id="17499836744696663">
+                                        <!-- <li class="mobile-box">
+                                            <div class="mobile-back text-end" bis_skin_checked="1">Menu<i class="ri-close-line"></i></div>
+                                        </li> -->
+                                        <!-- <li><a href="index.php">Home</a></li>
+                                        <li><a href="about-us.php">About us</a></li>
+                                        <li><a href="shop.html">Shop</a></li>
+                                        <li><a href="blog.html">Blog</a></li>
+                                        <li><a href="contact.html">Contact Us</a></li> -->
+                                    <!-- </ul>
+                                    <ul class="list-inline mb-0 pl-0 hor-swipe c-scrollbar-light"> -->
+                                @if (get_setting('header_menu_labels') != null)
+                                    @foreach (json_decode(get_setting('header_menu_labels'), true) as $key => $value)
+                                        <li>
+                                            <a href="{{ json_decode(get_setting('header_menu_links'), true)[$key] }}"
+                                                class="{{ $nav_txt_color }}
+                                            @if (url()->current() == json_decode(get_setting('header_menu_links'), true)[$key]) active @endif">
+                                                {{ translate($value) }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                @endif
+                             </ul>
+                                </nav>
+
+                    <div class="ml-xl-4 w-100 overflow-hidden">
+                        <div class="d-flex align-items-center justify-content-center justify-content-xl-start h-100">
+                           
+                        </div>
+                    </div>
+                    <!-- Cart -->
+                                             </div>
+                            <div bis_skin_checked="1">
+                                <div class="icon-nav" bis_skin_checked="1">
+                                    <ul>
+                                        <li class="onhover-div mobile-search">
+                                            <div data-bs-toggle="modal" data-bs-target="#searchModal" bis_skin_checked="1">
+                                               <svg id="Group_723" data-name="Group 723" xmlns="http://www.w3.org/2000/svg" width="20.001" height="20" viewBox="0 0 20.001 20">
+                                                    <path id="Path_3090" data-name="Path 3090" d="M9.847,17.839a7.993,7.993,0,1,1,7.993-7.993A8,8,0,0,1,9.847,17.839Zm0-14.387a6.394,6.394,0,1,0,6.394,6.394A6.4,6.4,0,0,0,9.847,3.453Z" transform="translate(-1.854 -1.854)" fill="#b5b5bf"></path>
+                                                    <path id="Path_3091" data-name="Path 3091" d="M24.4,25.2a.8.8,0,0,1-.565-.234l-6.15-6.15a.8.8,0,0,1,1.13-1.13l6.15,6.15A.8.8,0,0,1,24.4,25.2Z" transform="translate(-5.2 -5.2)" fill="#b5b5bf"></path>
+                                                </svg>
+                                            </div>
+                                              <div class="search-input-box">
+                                                <input type="text"
+                                                    class="border border-soft-light form-control fs-14 hov-animate-outline"
+                                                    id="search" name="keyword"
+                                                    @isset($query)
+                                                    value="{{ $query }}"
+                                                @endisset
+                                                    placeholder="{{ translate('I am shopping for...') }}" autocomplete="off">
+
+                                                <svg id="Group_723" data-name="Group 723" xmlns="http://www.w3.org/2000/svg"
+                                                    width="20.001" height="20" viewBox="0 0 20.001 20">
+                                                    <path id="Path_3090" data-name="Path 3090"
+                                                        d="M9.847,17.839a7.993,7.993,0,1,1,7.993-7.993A8,8,0,0,1,9.847,17.839Zm0-14.387a6.394,6.394,0,1,0,6.394,6.394A6.4,6.4,0,0,0,9.847,3.453Z"
+                                                        transform="translate(-1.854 -1.854)" fill="#b5b5bf" />
+                                                    <path id="Path_3091" data-name="Path 3091"
+                                                        d="M24.4,25.2a.8.8,0,0,1-.565-.234l-6.15-6.15a.8.8,0,0,1,1.13-1.13l6.15,6.15A.8.8,0,0,1,24.4,25.2Z"
+                                                        transform="translate(-5.2 -5.2)" fill="#b5b5bf" />
+                                                </svg>
+                                            </div>
+                                        </li>
+                                        <!-- <li class="onhover-div mobile-setting">
+                                            <div><i class="ri-equalizer-2-line"></i></div>
+                                            <div class="show-div setting">
+                                                <h6>language</h6>
+                                                <ul>
+                                                    <li><a href="#!">english</a></li>
+                                                    <li><a href="#!">french</a></li>
+                                                </ul>
+                                                <h6>currency</h6>
+                                                <ul class="list-inline">
+                                                    <li><a href="#!">euro</a></li>
+                                                    <li><a href="#!">rupees</a></li>
+                                                    <li><a href="#!">pound</a></li>
+                                                    <li><a href="#!">dollar</a></li>
+                                                </ul>
+                                            </div>
+                                        </li> -->
+                                        <li class="onhover-div mobile-cart">
+                                            <div data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas" bis_skin_checked="1">
+                                                <!-- <i class="ri-shopping-cart-line"></i> -->
+                                                @include('frontend.partials.cart.cart')
+                                            </div>
+                                            <!-- <span class="cart_qty_cls">2</span> -->
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <header class="@if (get_setting('header_stikcy') == 'on') sticky-top @endif z-1020 bg-white">
-        <!-- Search Bar -->
         <div class="position-relative logo-bar-area border-bottom border-md-nonea z-1025">
             <div class="container">
                 <div class="d-flex align-items-center">
-                    <!-- top menu sidebar button -->
-                    <button type="button" class="btn d-lg-none mr-3 mr-sm-4 p-0 active" data-toggle="class-toggle"
+                    
+                   <!--  <button type="button" class="btn d-lg-none mr-3 mr-sm-4 p-0 active" data-toggle="class-toggle"
                         data-target=".aiz-top-menu-sidebar">
                         <svg id="Component_43_1" data-name="Component 43 – 1" xmlns="http://www.w3.org/2000/svg"
                             width="16" height="16" viewBox="0 0 16 16">
@@ -134,9 +318,9 @@
                                 transform="translate(0 14)" fill="#919199" />
                         </svg>
 
-                    </button>
-                    <!-- Header Logo -->
-                    <div class="col-auto pl-0 pr-3 d-flex align-items-center">
+                    </button> -->
+                   
+                    <!-- <div class="col-auto pl-0 pr-3 d-flex align-items-center">
                         <a class="d-block py-20px mr-3 ml-0" href="{{ route('home') }}">
                             @php
                                 $header_logo = get_setting('header_logo');
@@ -149,16 +333,16 @@
                                     class="mw-100 h-30px h-md-40px" height="40">
                             @endif
                         </a>
-                    </div>
-                    <!-- Search Icon for small device -->
-                    <div class="d-lg-none ml-auto mr-0">
+                    </div> -->
+                    
+                  <!--   <div class="d-lg-none ml-auto mr-0">
                         <a class="p-2 d-block text-reset" href="javascript:void(0);" data-toggle="class-toggle"
                             data-target=".front-header-search">
                             <i class="las la-search la-flip-horizontal la-2x"></i>
                         </a>
-                    </div>
-                    <!-- Search field -->
-                    <div class="flex-grow-1 front-header-search d-flex align-items-center bg-white mx-xl-5">
+                    </div> -->
+                   
+                    <!-- <div class="flex-grow-1 front-header-search d-flex align-items-center bg-white mx-xl-5">
                         <div class="position-relative flex-grow-1 px-3 px-lg-0">
                             <form action="{{ route('search') }}" method="GET" class="stop-propagation">
                                 <div class="d-flex position-relative align-items-center">
@@ -205,30 +389,30 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- Search box -->
-                    <div class="d-none d-lg-none ml-3 mr-0">
+                    </div> -->
+                   
+                   <!--  <div class="d-none d-lg-none ml-3 mr-0">
                         <div class="nav-search-box">
                             <a href="#" class="nav-box-link">
                                 <i class="la la-search la-flip-horizontal d-inline-block nav-box-icon"></i>
                             </a>
                         </div>
-                    </div>
+                    </div> -->
 
                     @if (Auth::check() && auth()->user()->user_type == 'customer')
-                        <!-- Compare -->
-                        <div class="d-none d-lg-block ml-3 mr-0">
+                       
+                        <!-- <div class="d-none d-lg-block ml-3 mr-0">
                             <div class="" id="compare">
                                 @include('frontend.partials.compare')
                             </div>
-                        </div>
-                        <!-- Wishlist -->
-                        <div class="d-none d-lg-block mr-3" style="margin-left: 36px;">
+                        </div> -->
+                        
+                        <!-- <div class="d-none d-lg-block mr-3" style="margin-left: 36px;">
                             <div class="" id="wishlist">
                                 @include('frontend.partials.wishlist')
                             </div>
-                        </div>
-                        <!-- Notifications -->
+                        </div> -->
+                       
                         <ul class="list-inline mb-0 h-100 d-none d-xl-flex justify-content-end align-items-center">
                             <li class="list-inline-item ml-3 mr-3 pr-3 pl-0 dropdown">
                                 <a class="dropdown-toggle no-arrow text-secondary fs-12" data-toggle="dropdown"
@@ -340,12 +524,11 @@
                         </ul>
                     @endif
 
-                    <div class="d-none d-xl-block ml-auto mr-0">
+                    <!-- <div class="d-none d-xl-block ml-auto mr-0">
                         @auth
                             <span
                                 class="d-flex align-items-center nav-user-info py-20px @if (isAdmin()) ml-5 @endif"
                                 id="nav-user-info">
-                                <!-- Image -->
                                 <span
                                     class="size-40px rounded-circle overflow-hidden border border-transparent nav-user-img">
                                     @if ($user->avatar_original != null)
@@ -357,13 +540,10 @@
                                             onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
                                     @endif
                                 </span>
-                                <!-- Name -->
                                 <h4 class="h5 fs-14 fw-700 text-dark ml-2 mb-0">{{ $user->name }}</h4>
                             </span>
                         @else
-                            <!--Login & Registration -->
                             <span class="d-flex align-items-center nav-user-info ml-3">
-                                <!-- Image -->
                                 <span
                                     class="size-40px rounded-circle overflow-hidden border d-flex align-items-center justify-content-center nav-user-img">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="19.902" height="20.012"
@@ -380,7 +560,7 @@
                                     class="text-reset opacity-60 hov-opacity-100 hov-text-primary fs-12 d-inline-block py-2 pl-2">{{ translate('Registration') }}</a>
                             </span>
                         @endauth
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -594,11 +774,11 @@
         </div>
 
         <!-- Menu Bar -->
-        <div class="d-none d-lg-block position-relative bg-primary h-50px">
-            <div class="container h-100">
+        <div class="d-none d-lg-block position-relative">
+            <div class="container">
                 <div class="d-flex h-100">
-                    <!-- Categoty Menu Button -->
-                    <div class="d-none d-xl-block all-category has-transition bg-black-10" id="category-menu-bar">
+                  
+                   <!--  <div class="d-none d-xl-block all-category has-transition bg-black-10" id="category-menu-bar">
                         <div class="px-3 h-100"
                             style="padding-top: 12px;padding-bottom: 12px; width:270px; cursor: pointer;">
                             <div class="d-flex align-items-center justify-content-between">
@@ -613,14 +793,14 @@
                                     style="font-size: 1.2rem !important"></i>
                             </div>
                         </div>
-                    </div>
-                    <!-- Header Menus -->
+                    </div> -->
+               
                     @php
                         $nav_txt_color = ((get_setting('header_nav_menu_text') == 'light') ||  (get_setting('header_nav_menu_text') == null)) ? 'text-white' : 'text-dark';
                     @endphp
                     <div class="ml-xl-4 w-100 overflow-hidden">
                         <div class="d-flex align-items-center justify-content-center justify-content-xl-start h-100">
-                            <ul class="list-inline mb-0 pl-0 hor-swipe c-scrollbar-light">
+                           <!--  <ul class="list-inline mb-0 pl-0 hor-swipe c-scrollbar-light">
                                 @if (get_setting('header_menu_labels') != null)
                                     @foreach (json_decode(get_setting('header_menu_labels'), true) as $key => $value)
                                         <li class="list-inline-item mr-0 animate-underline-white">
@@ -632,19 +812,19 @@
                                         </li>
                                     @endforeach
                                 @endif
-                            </ul>
+                            </ul> -->
                         </div>
                     </div>
-                    <!-- Cart -->
+                    
                     <div class="d-none d-xl-block align-self-stretch ml-5 mr-0 has-transition bg-black-10"
                         data-hover="dropdown">
                         <div class="nav-cart-box dropdown h-100" id="cart_items" style="width: max-content;">
-                            @include('frontend.partials.cart.cart')
+                           
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Categoty Menus -->
+           
             <div class="hover-category-menu position-absolute w-100 top-100 left-0 right-0 z-3 d-none"
                 id="click-category-menu">
                 <div class="container">

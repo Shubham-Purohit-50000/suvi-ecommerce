@@ -1,4 +1,5 @@
-<!-- Last Viewed Products  -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="{{ asset('public/assets/css/remixicon1.css') }}" rel="stylesheet">
 @if(get_setting('last_viewed_product_activation') == 1 && Auth::check() && auth()->user()->user_type == 'customer')
 <div class="border-top" id="section_last_viewed_products" style="background-color: #fcfcfc;">
     @php
@@ -37,21 +38,20 @@
 
 <!-- footer Description -->
 @if (get_setting('footer_title') != null || get_setting('footer_description') != null)
-    <section class="bg-light border-top border-bottom mt-auto">
+  <!--   <section class="bg-light border-top border-bottom mt-auto">
         <div class="container py-4">
             <h1 class="fs-18 fw-700 text-gray-dark mb-3">{{ get_setting('footer_title',null, $system_language->code) }}</h1>
             <p class="fs-13 text-gray-dark text-justify mb-0">
                 {!! nl2br(get_setting('footer_description',null, $system_language->code)) !!}
             </p>
         </div>
-    </section>
+    </section> -->
 @endif
 
 <!-- footer top Bar -->
-<section class="bg-light border-top mt-auto">
+<!-- <section class="bg-light border-top mt-auto">
     <div class="container px-xs-0">
         <div class="row no-gutters border-left border-soft-light">
-            <!-- Terms & conditions -->
             <div class="col-lg-3 col-6 policy-file">
                 <a class="text-reset h-100  border-right border-bottom border-soft-light text-center p-2 p-md-4 d-block hov-ls-1" href="{{ route('terms') }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="26.004" height="32" viewBox="0 0 26.004 32">
@@ -61,7 +61,6 @@
                 </a>
             </div>
 
-            <!-- Return Policy -->
             <div class="col-lg-3 col-6 policy-file">
                 <a class="text-reset h-100  border-right border-bottom border-soft-light text-center p-2 p-md-4 d-block hov-ls-1" href="{{ route('returnpolicy') }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32.001" height="23.971" viewBox="0 0 32.001 23.971">
@@ -71,7 +70,6 @@
                 </a>
             </div>
 
-            <!-- Support Policy -->
             <div class="col-lg-3 col-6 policy-file">
                 <a class="text-reset h-100  border-right border-bottom border-soft-light text-center p-2 p-md-4 d-block hov-ls-1" href="{{ route('supportpolicy') }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32.002" height="32.002" viewBox="0 0 32.002 32.002">
@@ -88,7 +86,7 @@
                 </a>
             </div>
 
-            <!-- Privacy Policy -->
+
             <div class="col-lg-3 col-6 policy-file">
                 <a class="text-reset h-100 border-right border-bottom border-soft-light text-center p-2 p-md-4 d-block hov-ls-1" href="{{ route('privacypolicy') }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
@@ -105,12 +103,219 @@
             </div>
         </div>
     </div>
-</section>
+</section> -->
+
+<!-- Footer Section Start -->
+    <footer class="footer-style-1">
+        <section class="section-b-space darken-layout">
+            <div class="container">
+                <div class="row footer-theme g-md-5 g-2">
+                    <div class="col-xl-3 col-lg-5 col-md-6 sub-title">
+                        <div>
+                            <div class="footer-logo">
+                               <a href="{{ route('home') }}" class="d-block">
+                                @if(get_setting('footer_logo') != null)
+                                    <img class="lazyload h-45px" src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" data-src="{{ uploaded_asset(get_setting('footer_logo')) }}" alt="{{ env('APP_NAME') }}" height="45">
+                                @else
+                                    <img class="lazyload h-45px" src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" data-src="{{ static_asset('assets/img/logo.png') }}" alt="{{ env('APP_NAME') }}" height="45">
+                                @endif
+                            </a>
+                        </div>
+                            <p> Discover the latest trends and enjoy seamless shopping
+                                with our exclusive collections.
+                            </p>
+
+                            <ul class="contact-list">
+                                    <li>
+                                        <i class="ri-map-pin-line"></i>
+                                    <!-- <p  class="fs-13 text-secondary mb-1">{{ translate('Address') }}</p> -->
+                                    {{ get_setting('contact_address',null,App::getLocale()) }}
+                                </li>
+                                <li>
+                                    <a href="tel:{{ get_setting('contact_phone') }}" >
+                                        <i class="ri-phone-line"></i>
+                                        <!-- <p  class="fs-13 text-secondary mb-1">{{ translate('Phone') }}</p> -->
+                                        Call Us: {{ get_setting('contact_phone') }}
+                                    </a>
+                                </li>
+                                <li>
+                                     <a href="mailto:{{ get_setting('contact_email') }}" >
+                                    <i class="ri-mail-line"></i>
+                                    <!-- <p  class="fs-13 text-secondary mb-1">{{ translate('Email') }}</p> -->
+                                        Email Us: {{ get_setting('contact_email')  }}</a>
+                                    
+                                </li>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-md-6">
+                        <div class="sub-title">
+                            <div class="footer-title">
+                                <h4>Categories</h4>
+                            </div>
+                            <div class="footer-content">
+                                <ul>
+                                    <li><a href="product-page(thumbnail).html" class="text-content">Electronics 
+                                            </a></li>
+                                    <li><a href="product-page(thumbnail).html" class="text-content">Luggage
+                                            </a></li>
+                                   <!--  <li><a href="product-page(thumbnail).html" class="text-content">Books</a>
+                                    </li>
+                                    <li><a href="product-page(thumbnail).html" class="text-content">Christmas</a></li>
+                                    <li><a href="product-page(thumbnail).html" class="text-content">Classic
+                                            Furnishings</a></li>
+                                    <li><a href="product-page(thumbnail).html" class="text-content">Crystal
+                                            Clarity Optics</a></li> -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl col-lg-3 col-md-3">
+                        <div class="sub-title">
+                            <div class="footer-title">
+                                <h4>Useful Links</h4>
+                            </div>
+                            <div class="footer-content">
+                                <ul>
+                                    <li><a class="text-content" href="index.php">Home</a></li>
+                                    <li><a class="text-content" href="collection.html">Collections</a>
+                                    </li>
+                                    <li><a class="text-content" href="about-us.php">About Us</a>
+                                    </li>
+                                    <li><a class="text-content" href="blog(right-sidebar).html">Blogs</a></li>
+                                    <li><a class="text-content" href="offers.html">Offers</a></li>
+                                    <li><a class="text-content" href="search.html">Search</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-md-3">
+                        <div class="sub-title">
+                            <div class="footer-title">
+                                <h4>Help Center</h4>
+                            </div>
+                            <div class="footer-content">
+
+                                <ul>
+                                    @if (Auth::check())
+                                        <li>
+                                            <a class="text-content" href="{{ route('logout') }}">
+                                                {{ translate('Logout') }}
+                                            </a>
+                                        </li>
+                                    @else
+                                         <li>
+                                            <a class="text-content" href="{{ route('user.login') }}">
+                                                {{ translate('Login') }}
+                                            </a>
+                                        </li>
+                                    @endif
+                                     <li>
+                                            <a class="text-content" href="{{ route('purchase_history.index') }}">
+                                            {{ translate('Order History') }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                            <a class="text-content" href="{{ route('wishlists.index') }}">
+                                            {{ translate('My Wishlist') }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                            <a class="text-content" href="{{ route('orders.track') }}">
+                                            {{ translate('Track Order') }}
+                                        </a>
+                                    </li>
+                                    @if (addon_is_activated('affiliate_system'))
+                                        <li>
+                                            <a class="text-content" href="{{ route('affiliate.apply') }}">
+                                                {{ translate('Be an affiliate partner')}}
+                                            </a>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <div class="sub-title">
+                            <div class="footer-title">
+                                <h4>Follow Us</h4>
+                            </div>
+                            <div class="footer-content">
+                                <p class="mb-cls-content">Never Miss Anything From
+                                    Store By Signing Up To Our Newsletter.</p>
+                                <form novalidate="" class="form-inline">
+                                    <div class="form-group me-sm-3 mb-2">
+                                        <input type="email" class="form-control" placeholder="Enter Email Address">
+                                    </div>
+                                    <button class="btn btn-solid mb-2">Subscribe</button>
+                                </form>
+                                <div class="footer-social">
+                                     @if ( get_setting('show_social_links') )
+                                        <ul>
+                                            @if (!empty(get_setting('facebook_link')))
+                                                <li>
+                                                    <a href="{{ get_setting('facebook_link') }}" target="_blank"
+                                                        class="facebook"><i class="ri-facebook-fill"></i></a>
+                                                </li>
+                                            @endif
+                                            @if (!empty(get_setting('twitter_link')))
+                                                <li>
+                                                    <a href="{{ get_setting('twitter_link') }}" target="_blank"
+                                                        class="twitter"><i class="ri-twitter-fill"></i></a>
+                                                </li>
+                                            @endif
+                                            @if (!empty(get_setting('instagram_link')))
+                                                <li>
+                                                    <a href="{{ get_setting('instagram_link') }}" target="_blank"
+                                                        class="instagram"><i class="ri-instagram-fill"></i></a>
+                                                </li>
+                                            @endif
+                                            @if (!empty(get_setting('youtube_link')))
+                                                <li>
+                                                    <a href="{{ get_setting('youtube_link') }}" target="_blank"
+                                                        class="youtube"><i class="ri-youtube-fill"></i></a>
+                                                </li>
+                                            @endif
+                                            @if (!empty(get_setting('linkedin_link')))
+                                                <li>
+                                                    <a href="{{ get_setting('linkedin_link') }}" target="_blank"
+                                                        class="linkedin"><i class="ri-linkedin-fill"></i></a>
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="sub-footer dark-subfooter">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-6 col-md-6 col-sm-12">
+                        <div class="footer-end">
+                            <p><i class="ri-copyright-line"></i> 2024-25 themeforest powered by
+                                pixelstrap</p>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-12">
+                        <div class="payment-card-bottom">
+                            <img alt="payment options" src="{{ asset('public/uploads/home/payment.png') }}" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer Section End -->
+
+
 
 <!-- footer subscription & icons -->
-<section class="py-3 text-light footer-widget border-bottom" style="border-color: #3d3d46 !important; background-color: #212129 !important;">
+<!-- <section class="py-3 text-light footer-widget border-bottom" style="border-color: #3d3d46 !important; background-color: #212129 !important;">
     <div class="container">
-        <!-- footer logo -->
         <div class="mt-3 mb-4">
             <a href="{{ route('home') }}" class="d-block">
                 @if(get_setting('footer_logo') != null)
@@ -121,7 +326,6 @@
             </a>
         </div>
         <div class="row">
-            <!-- about & subscription -->
             
             <div class="col-xl-6 col-lg-7">
                 <div class="mb-4 text-secondary text-justify">
@@ -147,38 +351,36 @@
 
             <div class="col d-none d-lg-block"></div>
 
-            <!-- Follow & Apps -->
             <div class="col-xxl-3 col-xl-4 col-lg-4">
-                <!-- Social -->
                 @if ( get_setting('show_social_links') )
                     <h5 class="fs-14 fw-700 text-secondary text-uppercase mt-3 mt-lg-0">{{ translate('Follow Us') }}</h5>
                     <ul class="list-inline social colored mb-4">
                         @if (!empty(get_setting('facebook_link')))
-                            <li class="list-inline-item ml-2 mr-2">
+                            <li>
                                 <a href="{{ get_setting('facebook_link') }}" target="_blank"
                                     class="facebook"><i class="lab la-facebook-f"></i></a>
                             </li>
                         @endif
                         @if (!empty(get_setting('twitter_link')))
-                            <li class="list-inline-item ml-2 mr-2">
+                            <li>
                                 <a href="{{ get_setting('twitter_link') }}" target="_blank"
                                     class="twitter"><i class="lab la-twitter"></i></a>
                             </li>
                         @endif
                         @if (!empty(get_setting('instagram_link')))
-                            <li class="list-inline-item ml-2 mr-2">
+                            <li>
                                 <a href="{{ get_setting('instagram_link') }}" target="_blank"
                                     class="instagram"><i class="lab la-instagram"></i></a>
                             </li>
                         @endif
                         @if (!empty(get_setting('youtube_link')))
-                            <li class="list-inline-item ml-2 mr-2">
+                            <li>
                                 <a href="{{ get_setting('youtube_link') }}" target="_blank"
                                     class="youtube"><i class="lab la-youtube"></i></a>
                             </li>
                         @endif
                         @if (!empty(get_setting('linkedin_link')))
-                            <li class="list-inline-item ml-2 mr-2">
+                            <li>
                                 <a href="{{ get_setting('linkedin_link') }}" target="_blank"
                                     class="linkedin"><i class="lab la-linkedin-in"></i></a>
                             </li>
@@ -186,7 +388,6 @@
                     </ul>
                 @endif
 
-                <!-- Apps link -->
                 @if((get_setting('play_store_link') != null) || (get_setting('app_store_link') != null))
                     <h5 class="fs-14 fw-700 text-secondary text-uppercase mt-3">{{ translate('Mobile Apps') }}</h5>
                     <div class="d-flex mt-3">
@@ -207,15 +408,14 @@
         </div>
     </div>
 </section>
-
+ -->
 @php
     $col_values = ((get_setting('vendor_system_activation') == 1) || addon_is_activated('delivery_boy')) ? "col-lg-3 col-md-6 col-sm-6" : "col-md-4 col-sm-6";
 @endphp
-<section class="py-lg-3 text-light footer-widget" style="background-color: #212129 !important;">
-    <!-- footer widgets ========== [Accordion Fotter widgets are bellow from this]-->
+<!-- <section class="py-lg-3 text-light footer-widget" style="background-color: #212129 !important;">
+   
     <div class="container d-none d-lg-block">
         <div class="row">
-            <!-- Quick links -->
             <div class="{{ $col_values }}">
                 <div class="text-center text-sm-left mt-4">
                     <h4 class="fs-14 text-secondary text-uppercase fw-700 mb-3">
@@ -241,7 +441,7 @@
                 </div>
             </div>
 
-            <!-- Contacts -->
+
             <div class="{{ $col_values }}">
                 <div class="text-center text-sm-left mt-4">
                     <h4 class="fs-14 text-secondary text-uppercase fw-700 mb-3">{{ translate('Contacts') }}</h4>
@@ -264,7 +464,7 @@
                 </div>
             </div>
 
-            <!-- My Account -->
+
             <div class="{{ $col_values }}">
                 <div class="text-center text-sm-left mt-4">
                     <h4 class="fs-14 text-secondary text-uppercase fw-700 mb-3">{{ translate('My Account') }}</h4>
@@ -306,13 +506,13 @@
                         @endif
                     </ul>
                 </div>
-            </div>
+            </div> -->
 
-            <!-- Seller & Delivery Boy -->
-            @if ((get_setting('vendor_system_activation') == 1) || addon_is_activated('delivery_boy'))
+
+<!--             @if ((get_setting('vendor_system_activation') == 1) || addon_is_activated('delivery_boy'))
             <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="text-center text-sm-left mt-4">
-                    <!-- Seller -->
+  
                     @if (get_setting('vendor_system_activation') == 1)
                         <h4 class="fs-14 text-secondary text-uppercase fw-700 mb-3">{{ translate('Seller Zone') }}</h4>
                         <ul class="list-unstyled">
@@ -340,7 +540,7 @@
                         </ul>
                     @endif
 
-                    <!-- Delivery Boy -->
+           
                     @if (addon_is_activated('delivery_boy'))
                         <h4 class="fs-14 text-secondary text-uppercase fw-700 mt-4 mb-3">{{ translate('Delivery Boy') }}</h4>
                         <ul class="list-unstyled">
@@ -365,12 +565,12 @@
             </div>
             @endif
         </div>
-    </div>
+    </div> -->
 
-    <!-- Accordion Fotter widgets -->
-    <div class="d-lg-none bg-transparent">
+
+    <!-- <div class="d-lg-none bg-transparent"> -->
         <!-- Quick links -->
-        <div class="aiz-accordion-wrap bg-black">
+<!--         <div class="aiz-accordion-wrap bg-black">
             <div class="aiz-accordion-heading container bg-black">
                 <button class="aiz-accordion fs-14 text-white bg-transparent">{{ get_setting('widget_one',null,App::getLocale()) }}</button>
             </div>
@@ -397,7 +597,7 @@
             </div>
         </div>
 
-        <!-- Contacts -->
+
         <div class="aiz-accordion-wrap bg-black">
             <div class="aiz-accordion-heading container bg-black">
                 <button class="aiz-accordion fs-14 text-white bg-transparent">{{ translate('Contacts') }}</button>
@@ -424,7 +624,7 @@
             </div>
         </div>
 
-        <!-- My Account -->
+
         <div class="aiz-accordion-wrap bg-black">
             <div class="aiz-accordion-heading container bg-black">
                 <button class="aiz-accordion fs-14 text-white bg-transparent">{{ translate('My Account') }}</button>
@@ -472,7 +672,7 @@
             </div>
         </div>
 
-        <!-- Seller -->
+
         @if (get_setting('vendor_system_activation') == 1)
         <div class="aiz-accordion-wrap bg-black">
             <div class="aiz-accordion-heading container bg-black">
@@ -507,7 +707,7 @@
         </div>
         @endif
 
-        <!-- Delivery Boy -->
+
         @if (addon_is_activated('delivery_boy'))
         <div class="aiz-accordion-wrap bg-black">
             <div class="aiz-accordion-heading container bg-black">
@@ -538,18 +738,17 @@
     </div>
 </section>
 
-<!-- FOOTER -->
+
 <footer class="pt-3 pb-7 pb-xl-3 bg-black text-soft-light">
     <div class="container">
         <div class="row align-items-center py-3">
-            <!-- Copyright -->
-            <div class="col-lg-6 order-1 order-lg-0">
+             -->
+          <!--   <div class="col-lg-6 order-1 order-lg-0">
                 <div class="text-center text-lg-left fs-14" current-verison="{{get_setting("current_version")}}">
                     {!! get_setting('frontend_copyright_text', null, App::getLocale()) !!}
                 </div>
             </div>
 
-            <!-- Payment Method Images -->
             <div class="col-lg-6 mb-4 mb-lg-0">
                 <div class="text-center text-lg-right">
                     <ul class="list-inline mb-0">
@@ -565,12 +764,12 @@
             </div>
         </div>
     </div>
-</footer>
+</footer>  -->
 
 <!-- Mobile bottom nav -->
 <div class="aiz-mobile-bottom-nav d-xl-none fixed-bottom border-top border-sm-bottom border-sm-left border-sm-right mx-auto mb-sm-2" style="background-color: rgb(255 255 255 / 90%)!important;">
     <div class="row align-items-center gutters-5">
-        <!-- Home -->
+      
         <div class="col">
             <a href="{{ route('home') }}" class="text-secondary d-block text-center pb-2 pt-3 {{ areActiveRoutes(['home'],'svg-active')}}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
@@ -582,7 +781,7 @@
             </a>
         </div>
 
-        <!-- Categories -->
+   
         <div class="col">
             <a href="{{ route('categories.all') }}" class="text-secondary d-block text-center pb-2 pt-3 {{ areActiveRoutes(['categories.all'],'svg-active')}}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
@@ -598,7 +797,7 @@
         </div>
 
         @if (Auth::check() && auth()->user()->user_type == 'customer')
-            <!-- Cart -->
+            
             @php
                 $count = count(get_user_cart());
             @endphp
@@ -628,7 +827,6 @@
                 </a>
             </div>
 
-            <!-- Notifications -->
             <div class="col">
                 <a href="{{ route('customer.all-notifications') }}" class="text-secondary d-block text-center pb-2 pt-3 {{ areActiveRoutes(['customer.all-notifications'],'svg-active')}}">
                     <span class="d-inline-block position-relative px-2">
@@ -644,7 +842,7 @@
             </div>
         @endif
 
-        <!-- Account -->
+
         <div class="col">
             @if (Auth::check())
                 @if(isAdmin())
@@ -698,7 +896,7 @@
 </div>
 
 @if (Auth::check() && auth()->user()->user_type == 'customer')
-    <!-- User Side nav -->
+
     <div class="aiz-mobile-side-nav collapse-sidebar-wrap sidebar-xl d-xl-none z-1035">
         <div class="overlay dark c-pointer overlay-fixed" data-toggle="class-toggle" data-backdrop="static" data-target=".aiz-mobile-side-nav" data-same=".mobile-side-nav-thumb"></div>
         <div class="collapse-sidebar bg-white">
