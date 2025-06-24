@@ -77,11 +77,11 @@
                     </a>
                 </li>
 
-                <!-- Frequently Bought Product -->
+                <!-- Frequently Bought Product-->
                 <li class="nav-item">
                     <a class="nav-link" id="frequenty-bought-product-tab" href="#frequenty-bought-product"
                         data-toggle="tab" data-target="#frequenty-bought-product" type="button" role="tab" aria-controls="frequenty-bought-product" aria-selected="false">
-                        {{ translate('Frequently Bought') }}
+                        {{ translate('Related Product') }}
                     </a>
                 </li>
             </ul>
@@ -786,7 +786,7 @@
                     <div class="tab-pane fade" id="frequenty-bought-product" role="tabpanel" aria-labelledby="frequenty-bought-product-tab">
                         <div class="bg-white p-3 p-sm-2rem">
                             <!-- tab Title -->
-                            <h5 class="mb-3 pb-3 fs-17 fw-700">{{translate('Frequently Bought')}}</h5>
+                            <h5 class="mb-3 pb-3 fs-17 fw-700">{{translate('Related Product')}}</h5>
                             <div class="w-100">
                                 <div class="d-flex mb-4">
                                     <div class="radio mar-btm mr-5 d-flex align-items-center">

@@ -13,6 +13,7 @@ use Auth;
 use App\Utility\CartUtility;
 use Session;
 use Cookie;
+use App\Models\BusinessSetting;
 
 class CartController extends Controller
 {
@@ -41,7 +42,42 @@ class CartController extends Controller
             $carts = $carts->fresh();
         }
 
-        return view('frontend.view_cart', compact('carts'));
+        $is_special_subscribed = false;
+        $special_discount = 0;
+        if (auth()->user()) {
+            $user = Auth::user();
+            $active_special_subscription = $user->specialSubscriptions()
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now())
+                ->with('specialSubscription')
+                ->latest('end_date')
+                ->first();
+            if ($active_special_subscription && $active_special_subscription->specialSubscription) {
+                $is_special_subscribed = true;
+                $special_discount = $active_special_subscription->specialSubscription->discount;
+            }
+        }
+
+        $general_discount_amount = 0;
+        $general_discount_message = null;
+        $general_discount = BusinessSetting::where('type', 'general_discount')->first();
+        if ($general_discount) {
+            $general_discount_data = json_decode($general_discount->value, true);
+            if (isset($general_discount_data['active']) && $general_discount_data['active'] == 1 && isset($general_discount_data['percentage']) && $general_discount_data['percentage'] > 0) {
+                $unique_products = $carts->pluck('product_id')->unique()->count();
+                if ($unique_products >= 2) {
+                    $cart_subtotal = 0;
+                    foreach ($carts as $cartItem) {
+                        $product = Product::find($cartItem['product_id']);
+                        $cart_subtotal += CartUtility::get_price($product, $product->stocks->where('variant', $cartItem['variation'])->first(), $cartItem['quantity']) * $cartItem['quantity'];
+                    }
+                    $general_discount_amount = ($cart_subtotal * $general_discount_data['percentage']) / 100;
+                    $general_discount_message = __('You have received a General Discount of :percent%', ['percent' => $general_discount_data['percentage']]);
+                }
+            }
+        }
+
+        return view('frontend.view_cart', compact('carts', 'is_special_subscribed', 'special_discount', 'general_discount_amount', 'general_discount_message'));
     }
 
     public function showCartModal(Request $request)
@@ -171,10 +207,50 @@ class CartController extends Controller
             $temp_user_id = $request->session()->get('temp_user_id');
             $carts = Cart::where('temp_user_id', $temp_user_id)->get();
         }
-
+        // Special Discount
+        $is_special_subscribed = false;
+        $special_discount = 0;
+        if (auth()->user()) {
+            $user = Auth::user();
+            $active_special_subscription = $user->specialSubscriptions()
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now())
+                ->with('specialSubscription')
+                ->latest('end_date')
+                ->first();
+            if ($active_special_subscription && $active_special_subscription->specialSubscription) {
+                $is_special_subscribed = true;
+                $special_discount = $active_special_subscription->specialSubscription->discount;
+            }
+        }
+        // General Discount
+        $general_discount_amount = 0;
+        $general_discount_message = null;
+        $general_discount = BusinessSetting::where('type', 'general_discount')->first();
+        if ($general_discount) {
+            $general_discount_data = json_decode($general_discount->value, true);
+            if (isset($general_discount_data['active']) && $general_discount_data['active'] == 1 && isset($general_discount_data['percentage']) && $general_discount_data['percentage'] > 0) {
+                $unique_products = $carts->pluck('product_id')->unique()->count();
+                if ($unique_products >= 2) {
+                    $cart_subtotal = 0;
+                    foreach ($carts as $cartItem) {
+                        $product = Product::find($cartItem['product_id']);
+                        $cart_subtotal += CartUtility::get_price($product, $product->stocks->where('variant', $cartItem['variation'])->first(), $cartItem['quantity']) * $cartItem['quantity'];
+                    }
+                    $general_discount_amount = ($cart_subtotal * $general_discount_data['percentage']) / 100;
+                    $general_discount_message = __('You have received a General Discount of :percent%', ['percent' => $general_discount_data['percentage']]);
+                }
+            }
+        }
         return array(
             'cart_count' => count($carts),
-            'cart_view' => view('frontend.partials.cart.cart_details', compact('carts'))->render(),
+            'cart_view' => view('frontend.partials.cart.cart_details', [
+                'carts' => $carts,
+                'is_special_subscribed' => $is_special_subscribed,
+                'special_discount' => $special_discount,
+                'general_discount_amount' => $general_discount_amount,
+                'general_discount_message' => $general_discount_message
+            ])->render(),
             'nav_cart_view' => view('frontend.partials.cart.cart')->render(),
         );
     }
@@ -227,17 +303,57 @@ class CartController extends Controller
             $cartItem->save();
         }
 
+        // Special Discount
+        $is_special_subscribed = false;
+        $special_discount = 0;
         if (auth()->user() != null) {
             $user_id = Auth::user()->id;
+            $user = Auth::user();
+            $active_special_subscription = $user->specialSubscriptions()
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now())
+                ->with('specialSubscription')
+                ->latest('end_date')
+                ->first();
+            if ($active_special_subscription && $active_special_subscription->specialSubscription) {
+                $is_special_subscribed = true;
+                $special_discount = $active_special_subscription->specialSubscription->discount;
+            }
             $carts = Cart::where('user_id', $user_id)->get();
         } else {
             $temp_user_id = $request->session()->get('temp_user_id');
             $carts = Cart::where('temp_user_id', $temp_user_id)->get();
         }
 
+        // General Discount
+        $general_discount_amount = 0;
+        $general_discount_message = null;
+        $general_discount = BusinessSetting::where('type', 'general_discount')->first();
+        if ($general_discount) {
+            $general_discount_data = json_decode($general_discount->value, true);
+            if (isset($general_discount_data['active']) && $general_discount_data['active'] == 1 && isset($general_discount_data['percentage']) && $general_discount_data['percentage'] > 0) {
+                $unique_products = $carts->pluck('product_id')->unique()->count();
+                if ($unique_products >= 2) {
+                    $cart_subtotal = 0;
+                    foreach ($carts as $cartItem) {
+                        $product = Product::find($cartItem['product_id']);
+                        $cart_subtotal += CartUtility::get_price($product, $product->stocks->where('variant', $cartItem['variation'])->first(), $cartItem['quantity']) * $cartItem['quantity'];
+                    }
+                    $general_discount_amount = ($cart_subtotal * $general_discount_data['percentage']) / 100;
+                    $general_discount_message = __('You have received a General Discount of :percent%', ['percent' => $general_discount_data['percentage']]);
+                }
+            }
+        }
+
         return array(
             'cart_count' => count($carts),
-            'cart_view' => view('frontend.partials.cart.cart_details', compact('carts'))->render(),
+            'cart_view' => view('frontend.partials.cart.cart_details', [
+                'carts' => $carts,
+                'is_special_subscribed' => $is_special_subscribed,
+                'special_discount' => $special_discount,
+                'general_discount_amount' => $general_discount_amount,
+                'general_discount_message' => $general_discount_message
+            ])->render(),
             'nav_cart_view' => view('frontend.partials.cart.cart')->render(),
         );
     }
@@ -288,6 +404,47 @@ class CartController extends Controller
         }
         $carts = $carts->fresh();
 
-        return view('frontend.partials.cart.cart_details', compact('carts'))->render();
+        // Special Discount
+        $is_special_subscribed = false;
+        $special_discount = 0;
+        if (auth()->user()) {
+            $user = Auth::user();
+            $active_special_subscription = $user->specialSubscriptions()
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now())
+                ->with('specialSubscription')
+                ->latest('end_date')
+                ->first();
+            if ($active_special_subscription && $active_special_subscription->specialSubscription) {
+                $is_special_subscribed = true;
+                $special_discount = $active_special_subscription->specialSubscription->discount;
+            }
+        }
+        // General Discount
+        $general_discount_amount = 0;
+        $general_discount_message = null;
+        $general_discount = BusinessSetting::where('type', 'general_discount')->first();
+        if ($general_discount) {
+            $general_discount_data = json_decode($general_discount->value, true);
+            if (isset($general_discount_data['active']) && $general_discount_data['active'] == 1 && isset($general_discount_data['percentage']) && $general_discount_data['percentage'] > 0) {
+                $unique_products = $carts->pluck('product_id')->unique()->count();
+                if ($unique_products >= 2) {
+                    $cart_subtotal = 0;
+                    foreach ($carts as $cartItem) {
+                        $product = Product::find($cartItem['product_id']);
+                        $cart_subtotal += CartUtility::get_price($product, $product->stocks->where('variant', $cartItem['variation'])->first(), $cartItem['quantity']) * $cartItem['quantity'];
+                    }
+                    $general_discount_amount = ($cart_subtotal * $general_discount_data['percentage']) / 100;
+                    $general_discount_message = __('You have received a General Discount of :percent%', ['percent' => $general_discount_data['percentage']]);
+                }
+            }
+        }
+        return view('frontend.partials.cart.cart_details', [
+            'carts' => $carts,
+            'is_special_subscribed' => $is_special_subscribed,
+            'special_discount' => $special_discount,
+            'general_discount_amount' => $general_discount_amount,
+            'general_discount_message' => $general_discount_message
+        ])->render();
     }
 }

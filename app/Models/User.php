@@ -168,4 +168,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Preorder::class);
     }
+
+    public function specialSubscriptions()
+    {
+        return $this->hasMany(\App\Models\CustomerSpecialSubscription::class, 'customer_id');
+    }
 }

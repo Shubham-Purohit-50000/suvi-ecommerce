@@ -188,6 +188,23 @@ class OrderController extends Controller
             $seller_products[$product->user_id] = $product_ids;
         }
 
+        // Special Subscription Discount
+        $is_special_subscribed = false;
+        $special_discount = 0;
+        if (auth()->check()) {
+            $user = Auth::user();
+            $active_special_subscription = $user->specialSubscriptions()
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now())
+                ->with('specialSubscription')
+                ->latest('end_date')
+                ->first();
+            if ($active_special_subscription && $active_special_subscription->specialSubscription) {
+                $is_special_subscribed = true;
+                $special_discount = $active_special_subscription->specialSubscription->discount;
+            }
+        }
+
         foreach ($seller_products as $seller_product) {
             $order = new Order;
             $order->combined_order_id = $combined_order->id;
@@ -205,7 +222,7 @@ class OrderController extends Controller
             $tax = 0;
             $shipping = 0;
             $coupon_discount = 0;
-
+            $special_discount_amount = 0;
             //Order Details Storing
             foreach ($seller_product as $cartItem) {
                 $product = Product::find($cartItem['product_id']);
@@ -276,8 +293,24 @@ class OrderController extends Controller
                     }
                 }
             }
-
-            $order->grand_total = $subtotal + $tax + $shipping;
+            // Apply special discount after subtotal, before grand_total
+            if ($is_special_subscribed && $special_discount > 0) {
+                $special_discount_amount = ($subtotal * $special_discount) / 100;
+            }
+            $order->special_discount = $special_discount_amount;
+            $order->special_discount_percent = $special_discount;
+            
+            // General Discount
+            $general_discount_amount = 0;
+            $general_discount_percent = 0;
+            if ($request->has('general_discount_amount')) {
+                $general_discount_amount = $request->input('general_discount_amount', 0);
+                $general_discount_percent = $request->input('general_discount_percent', 0);
+            }
+            $order->general_discount_amount = $general_discount_amount;
+            $order->general_discount_percent = $general_discount_percent;
+            // Apply both discounts to grand_total
+            $order->grand_total = $subtotal + $tax + $shipping - $special_discount_amount - $general_discount_amount;
 
             if ($seller_product[0]->coupon_code != null) {
                 $order->coupon_discount = $coupon_discount;
@@ -292,8 +325,14 @@ class OrderController extends Controller
             $combined_order->grand_total += $order->grand_total;
 
             $order->save();
+            // Update order_details with special discount (optional, per product)
+            foreach ($order->orderDetails as $orderDetail) {
+                $orderDetail->special_discount = $is_special_subscribed ? $special_discount : 0;
+                $orderDetail->save();
+            }
         }
 
+        $combined_order->special_discount = $is_special_subscribed ? $special_discount : 0;
         $combined_order->save();
 
         $request->session()->put('combined_order_id', $combined_order->id);

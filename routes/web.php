@@ -347,6 +347,8 @@ Route::group(['middleware' => ['customer', 'verified', 'unbanned']], function ()
     Route::post('/order/re-payment', [CheckoutController::class, 'orderRePayment'])->name('order.re_payment');
 });
 
+// My Subscription
+Route::get('/my_subscription', [HomeController::class, 'mySubscription'])->name('my_subscription')->middleware(['auth', 'verified', 'unbanned']);
 
 Route::get('translation-check/{check}', [LanguageController::class, 'get_translation']);
 
@@ -393,7 +395,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 Route::get('/instamojo/payment/pay-success', [InstamojoController::class, 'success'])->name('instamojo.success');
 
-Route::post('rozer/payment/pay-success', [RazorpayController::class, 'payment'])->name('payment.rozer');
+Route::match(['get', 'post'], 'rozer/payment/pay-success', [App\Http\Controllers\Payment\RazorpayController::class, 'payment'])->name('payment.rozer');
 
 Route::get('/paystack/payment/callback', [PaystackController::class, 'handleGatewayCallback']);
 Route::get('/paystack/new-callback', [PaystackController::class, 'paystackNewCallback']);
@@ -493,3 +495,8 @@ Route::controller(PageController::class)->group(function () {
 Route::controller(ContactController::class)->group(function () {
     Route::post('/contact', 'contact')->name('contact');
 });
+
+// Special Subscription Purchase
+Route::post('/purchase-special-subscription', [HomeController::class, 'purchaseSpecialSubscription'])->name('purchase_special_subscription')->middleware(['auth', 'verified', 'unbanned']);
+Route::get('/special-subscription/payment-callback', [HomeController::class, 'specialSubscriptionPaymentCallback'])->name('special_subscription.payment_callback')->middleware(['auth', 'verified', 'unbanned']);
+

@@ -10,6 +10,7 @@
             $coupon_code = null;
             $coupon_discount = 0;
             $total_point = 0;
+            $special_discount_amount = 0;
         @endphp
         @foreach ($carts as $key => $cartItem)
             @php
@@ -28,6 +29,11 @@
                 }
             @endphp
         @endforeach
+        @php
+            if(isset($is_special_subscribed) && $is_special_subscribed && isset($special_discount) && $special_discount > 0) {
+                $special_discount_amount = ($subtotal * $special_discount) / 100;
+            }
+        @endphp
 
         <div class="card-header pt-4 pb-1 border-bottom-0">
             <h3 class="fs-16 fw-700 mb-0">{{ translate('Order Summary') }}</h3>
@@ -48,7 +54,7 @@
                 <div class="@if (addon_is_activated('club_point')) col-6 @else col-12 @endif">
                     <div class="d-flex align-items-center justify-content-between bg-primary p-2">
                         <span class="fs-13 text-white">{{ translate('Total Products') }}</span>
-                        <span class="fs-13 fw-700 text-white">{{ sprintf("%02d", count($carts)) }}</span>
+                        <span class="fw-700 fs-16 text-white">{{ count($carts) }}</span>
                     </div>
                 </div>
                 @if (addon_is_activated('club_point'))
@@ -97,20 +103,33 @@
                             <td class="text-right pr-0 fs-14 pt-0 pb-2 text-dark border-top-0">{{ single_price($coupon_discount) }}</td>
                         </tr>
                     @endif
+                    <!-- Special Subscription Discount -->
+                    @if(isset($is_special_subscribed) && $is_special_subscribed && isset($special_discount) && $special_discount > 0 && $special_discount_amount > 0)
+                        <tr class="cart-special-discount">
+                            <th class="pl-0 fs-14 fw-400 pt-0 pb-2 text-success border-top-0">{{ translate('Special Subscription Discount') }}</th>
+                            <td class="text-right pr-0 fs-14 pt-0 pb-2 text-success border-top-0">-{{ single_price($special_discount_amount) }}</td>
+                        </tr>
+                    @endif
+                    <!-- General Discount -->
+                    @if(isset($general_discount_amount) && $general_discount_amount > 0)
+                        <tr class="cart-general-discount">
+                            <th class="pl-0 fs-14 fw-400 pt-0 pb-2 text-success border-top-0">
+                                {{ translate('General Discount') }}
+                                @if(isset($general_discount_message))<br><small>{{ $general_discount_message }}</small>@endif
+                            </th>
+                            <td class="text-right pr-0 fs-14 pt-0 pb-2 text-success border-top-0">
+                                -{{ single_price($general_discount_amount) }}
+                            </td>
+                        </tr>
+                    @endif
 
                     @php
-                        $total = $subtotal + $tax + $shipping;
-                        if (Session::has('club_point')) {
-                            $total -= Session::get('club_point');
-                        }
-                        if ($coupon_discount > 0) {
-                            $total -= $coupon_discount;
-                        }
+                        $grand_total = $subtotal + $tax + $shipping - $coupon_discount - $special_discount_amount - ($general_discount_amount ?? 0);
                     @endphp
                     <!-- Total -->
                     <tr class="cart-total">
                         <th class="pl-0 fs-14 text-dark fw-700 border-top-0 pt-3 text-uppercase">{{ translate('Total') }}</th>
-                        <td class="text-right pr-0 fs-16 fw-700 text-primary border-top-0 pt-3">{{ single_price($total) }}</td>
+                        <td class="text-right pr-0 fs-16 fw-700 text-primary border-top-0 pt-3">{{ single_price($grand_total) }}</td>
                     </tr>
                 </tfoot>
             </table>

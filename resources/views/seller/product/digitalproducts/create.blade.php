@@ -211,7 +211,7 @@
                 {{-- Frequently Bought Products --}}
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0 h6">{{ translate('Frequently Bought') }}</h5>
+                        <h5 class="mb-0 h6">{{ translate('Related Product') }}</h5>
                     </div>
                     <div class="w-100">
                         <div class="d-flex my-3"> 
