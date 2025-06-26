@@ -103,6 +103,18 @@ class PageController extends Controller
         abort(404);
     }
 
+    
+    public function about_edit(Request $request, $id)
+    {
+        $lang = $request->lang;
+        $page_name = $request->page;
+        $page = Page::where('slug', $id)->first();
+        if($page != null){
+            return view('backend.website_settings.pages.about_us_page_edit', compact('page','lang'));
+        }
+        abort(404);
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -149,6 +161,59 @@ class PageController extends Controller
 
     }
 
+    public function about_update(Request $request, $id)
+    {
+        $page = Page::findOrFail($id);
+        
+        // Prepare the content data for About Us page
+        $data = [
+            'mission_image' => $request->mission_image,
+            'mission_content' => $request->mission_content,
+            'vision_image' => $request->vision_image,
+            'vision_content' => $request->vision_content,
+            'why_choose_title' => $request->why_choose_title,
+            'why_choose_description' => $request->why_choose_description,
+            'why_choose_items' => $request->why_choose_items ?? [],
+            'banner_image' => $request->banner_image,
+            'business_steps_title' => $request->business_steps_title,
+            'business_steps' => $request->business_steps ?? [],
+            'main_content' => $request->main_content
+        ];
+        
+        $content = json_encode($data);
+
+        if (Page::where('id', '!=', $id)->where('slug', preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug)))->first() == null) {
+            if($page->type == 'custom_page'){
+                $page->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug));
+            }
+            
+            if($request->lang == env("DEFAULT_LANGUAGE")){
+                $page->title = $request->title;
+                $page->content = $content;
+            }
+            
+            $page->meta_title = $request->meta_title;
+            $page->meta_description = $request->meta_description;
+            $page->keywords = $request->keywords;
+            $page->meta_image = $request->meta_image;
+            $page->save();
+
+            $page_translation = PageTranslation::firstOrNew([
+                'lang' => $request->lang, 
+                'page_id' => $page->id
+            ]);
+            $page_translation->title = $request->title;
+            $page_translation->content = $content;
+            $page_translation->save();
+
+            flash(translate('About Us page has been updated successfully'))->success();
+            return redirect()->route('website.pages');
+        }
+
+        flash(translate('Slug has been used already'))->warning();
+        return back();
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -173,10 +238,14 @@ class PageController extends Controller
             if($page->type == 'contact_us_page'){
                 return view('frontend.contact_us_page', compact('page'));
             }
+            if($page->slug == 'about-us'){
+                return view('frontend.about_us', compact('page'));
+            }
             return view('frontend.custom_page', compact('page'));
         }
         abort(404);
     }
+    
     public function mobile_custom_page($slug){
         $page = Page::where('slug', $slug)->first();
         if($page != null){

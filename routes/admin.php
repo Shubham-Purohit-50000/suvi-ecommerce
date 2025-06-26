@@ -355,7 +355,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::controller(PageController::class)->group(function () {
             Route::get('/custom-pages/edit/{id}', 'edit')->name('custom-pages.edit');
             Route::get('/custom-pages/destroy/{id}', 'destroy')->name('custom-pages.destroy');
+            Route::get('/about-page/edit/{id}', 'about_edit')->name('about-page.edit');
+            Route::PATCH('/about-page/update/{id}', 'about_update')->name('about-page.update');
         });
+        
     });
 
     // Staff Roles

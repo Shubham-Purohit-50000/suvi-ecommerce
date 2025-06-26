@@ -50,8 +50,25 @@
           				</a>
 					@endif
         		</td>
+				<td>
+					<a href="#" class="text-reset">{{translate('About-us')}} shubham</a>
+					<a href="#" class="btn btn-icon btn-circle btn-sm btn-soft-primary" title="Edit">
+						<i class="las la-pen"></i>
+					</a>
+				</td>
         	</tr>
         	@endforeach
+			<tr>
+				<td>#</td>
+				<td><a href="#" class="text-reset">{{translate('About us')}}</a></td>
+				<td>{{ route('home') }}/{{ $page->slug }}</td>
+				<td class="text-right">
+					<a href="{{route('about-page.edit', ['id'=>'about-us', 'lang'=>env('DEFAULT_LANGUAGE')] )}}" class="btn btn-icon btn-circle btn-sm btn-soft-primary" title="Edit">
+						<i class="las la-pen"></i>
+					</a>
+				</td>
+			</tr>
+
         </tbody>
     </table>
 	</div>
