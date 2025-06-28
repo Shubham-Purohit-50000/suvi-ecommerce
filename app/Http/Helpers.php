@@ -1802,6 +1802,17 @@ if (!function_exists('get_best_selling_products')) {
     }
 }
 
+// Get Best Selling Products by Category
+if (!function_exists('get_category_best_selling_products')) {
+    function get_category_best_selling_products($category_id, $limit = 10)
+    {
+        $product_query = Product::query();
+        $product_query = $product_query->where('category_id', $category_id);
+        $product_query = $product_query->isApprovedPublished();
+        return $product_query->orderBy('num_of_sale', 'desc')->limit($limit)->get();
+    }
+}
+
 // Get Seller Products
 if (!function_exists('get_seller_products')) {
     function get_seller_products($user_id)

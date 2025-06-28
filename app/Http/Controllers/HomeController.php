@@ -57,7 +57,10 @@ class HomeController extends Controller
             return Category::with('bannerImage')->where('featured', 1)->get();
         });
 
-        return view('frontend.' . get_setting('homepage_select') . '.index', compact('featured_categories', 'lang'));
+        $latest_blogs = \App\Models\Blog::latest()->limit(3)->get();
+        $testimonials = \App\Models\Testimonial::latest()->limit(2)->get();
+
+        return view('frontend.' . get_setting('homepage_select') . '.index', compact('featured_categories', 'lang', 'latest_blogs', 'testimonials'));
     }
 
     public function load_todays_deal_section()

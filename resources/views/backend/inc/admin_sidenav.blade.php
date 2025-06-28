@@ -1017,6 +1017,18 @@
                     </a>
                 </li>
 
+                <!-- Testimonials -->
+                <li class="aiz-side-nav-item">
+                    <a href="{{ route('admin.testimonial.index') }}" class="aiz-side-nav-link">
+                        <div class="aiz-side-nav-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                                <path d="M8 1.333a6.667 6.667 0 1 0 6.667 6.667A6.675 6.675 0 0 0 8 1.333zm0 12A5.333 5.333 0 1 1 13.333 8 5.34 5.34 0 0 1 8 13.333zm0-9.333a1.333 1.333 0 1 0 1.333 1.333A1.334 1.334 0 0 0 8 4zm0 6.667a3.333 3.333 0 0 1-2.667-1.333.667.667 0 1 1 1.067-.8A2 2 0 0 0 8 9.333a2 2 0 0 0 1.6-.8.667.667 0 1 1 1.067.8A3.333 3.333 0 0 1 8 10.667z" fill="#575b6a"/>
+                            </svg>
+                        </div>
+                        <span class="aiz-side-nav-text">{{ translate('Testimonials') }}</span>
+                    </a>
+                </li>
+
                 <!-- Reports -->
                 @canany(['earning_report',
                 'in_house_product_sale_report','seller_products_sale_report','products_stock_report','product_wishlist_report','user_search_report','commission_history_report','wallet_transaction_report'])

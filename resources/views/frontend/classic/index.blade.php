@@ -340,7 +340,7 @@
     </div>
 
 
-        <!-- full banner -->
+    <!-- full banner -->
     <section class="category_bg_img">
         <a href="category-page.html">
             <img src="{{ asset('public/uploads/home/3.png') }}" alt="" class="img-fluid blur-up lazyload w-100">
@@ -428,7 +428,48 @@
     </div>
     <!-- service layout  end -->
 
-     <!--Testimonial start-->
+    @if (isset($latest_blogs) && count($latest_blogs) > 0)
+        <section class="latest-blogs-section py-4">
+            <div class="container">
+                <div class="d-flex mb-3 align-items-baseline justify-content-between">
+                    <h3 class="fs-16 fs-md-20 fw-700 mb-2 mb-sm-0">
+                        <span>{{ translate('Latest Blogs') }}</span>
+                    </h3>
+                    <div>
+                        <a class="text-blue fs-10 fs-md-12 fw-700 hov-text-primary animate-underline-primary"
+                           href="{{ route('blog') }}">{{ translate('View All Blogs') }}</a>
+                    </div>
+                </div>
+                <div class="row">
+                    @foreach ($latest_blogs->take(3) as $blog)
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <a href="{{ route('blog.details', $blog->slug) }}" class="d-block overflow-hidden">
+                                    <img src="{{ $blog->banner ? uploaded_asset($blog->banner) : static_asset('assets/img/placeholder-rect.jpg') }}"
+                                         class="card-img-top img-fit lazyload"
+                                         alt="{{ $blog->title }}"
+                                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title fs-16 fw-700 mb-2 text-truncate-2">
+                                        <a href="{{ route('blog.details', $blog->slug) }}" class="text-reset hov-text-primary">
+                                            {{ $blog->title }}
+                                        </a>
+                                    </h5>
+                                    <p class="card-text fs-14 text-muted text-truncate-3">
+                                        {{ strip_tags(Str::limit($blog->short_description, 100)) }}
+                                    </p>
+                                    <span class="fs-12 text-secondary">{{ date('M d, Y', strtotime($blog->created_at)) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <!--Testimonial start-->
     <section class="testimonial small-section">
         <div class="container">
             <div class="title1">
@@ -436,76 +477,22 @@
                 <h2 class="title-inner1">What People Say</h2>
             </div>
             <div class="slide-2 testimonial-slider no-arrow">
-                <div>
-                    <div class="media">
-                        <div class="text-center">
-                            <img src="{{ asset('public/uploads/testimonial/1.webp') }}" alt="#">
-                            <h5>Mark Junco</h5>
-                            <h6>Designer</h6>
+                @if(isset($testimonials) && count($testimonials) > 0)
+                    @foreach($testimonials as $testimonial)
+                        <div>
+                            <div class="media">
+                                <div class="text-center">
+                                    <img src="{{ $testimonial['image'] ? uploaded_asset($testimonial['image']) : asset('public/uploads/testimonial/default.jpg') }}" alt="{{ $testimonial['full_name'] }}">
+                                    <h5>{{ $testimonial['full_name'] }}</h5>
+                                    <h6>{{ $testimonial['designation'] }}</h6>
+                                </div>
+                                <div class="media-body">
+                                    <p>{{ $testimonial['message'] }}</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="media-body">
-                            <p>you how all this mistaken idea of denouncing pleasure and praising pain was born
-                                and I will give you a complete account of the system, and expound the actual
-                                teachings.</p>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="media">
-                        <div class="text-center">
-                            <img src="{{ asset('public/uploads/testimonial/2.jpg') }}" alt="#">
-                            <h5>Mark Junco</h5>
-                            <h6>Designer</h6>
-                        </div>
-                        <div class="media-body">
-                            <p>you how all this mistaken idea of denouncing pleasure and praising pain was born
-                                and I will give you a complete account of the system, and expound the actual
-                                teachings.</p>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="media">
-                        <div class="text-center">
-                            <img src="{{ asset('public/uploads/testimonial/3.webp') }}" alt="#">
-                            <h5>Mark Junco</h5>
-                            <h6>Designer</h6>
-                        </div>
-                        <div class="media-body">
-                            <p>you how all this mistaken idea of denouncing pleasure and praising pain was born
-                                and I will give you a complete account of the system, and expound the actual
-                                teachings.</p>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="media">
-                        <div class="text-center">
-                            <img src="{{ asset('public/uploads/testimonial/4.webp') }}" alt="#">
-                            <h5>Mark Junco</h5>
-                            <h6>Designer</h6>
-                        </div>
-                        <div class="media-body">
-                            <p>you how all this mistaken idea of denouncing pleasure and praising pain was born
-                                and I will give you a complete account of the system, and expound the actual
-                                teachings.</p>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="media">
-                        <div class="text-center">
-                            <img src="{{ asset('public/uploads/testimonial/5.jpg') }}" alt="#">
-                            <h5>Mark Junco</h5>
-                            <h6>Designer</h6>
-                        </div>
-                        <div class="media-body">
-                            <p>you how all this mistaken idea of denouncing pleasure and praising pain was born
-                                and I will give you a complete account of the system, and expound the actual
-                                teachings.</p>
-                        </div>
-                    </div>
-                </div>
+                    @endforeach
+                @endif
             </div>
         </div>
     </section>

@@ -57,6 +57,7 @@ use App\Http\Controllers\WarrantyController;
 use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\ZoneController;
 use App\Http\Controllers\SpecialSubscriptionController;
+use App\Http\Controllers\TestimonialController;
 
 /*
   |--------------------------------------------------------------------------
@@ -653,6 +654,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::put('/special-subscription/update/{id}', 'update')->name('admin.special_subscription.update');
         Route::delete('/special-subscription/destroy/{id}', 'destroy')->name('admin.special_subscription.destroy');
         Route::get('/special-subscription', 'index')->name('admin.special_subscription.index');
+    });
+    
+    Route::controller(TestimonialController::class)->group(function () {
+        Route::get('/testimonial/create', 'create')->name('admin.testimonial.create');
+        Route::post('/testimonial/store', 'store')->name('admin.testimonial.store');
+        Route::get('/testimonial/edit/{id}', 'edit')->name('admin.testimonial.edit');
+        Route::put('/testimonial/update/{id}', 'update')->name('admin.testimonial.update');
+        Route::delete('/testimonial/destroy/{id}', 'destroy')->name('admin.testimonial.destroy');
+        Route::get('/testimonial', 'index')->name('admin.testimonial.index');
     });
 
     Route::get('/general-discount', function() {
